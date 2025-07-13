@@ -1,3 +1,6 @@
+RUN:
+flutter run
+
 # flutter_giphy
 
 A new Flutter project.
