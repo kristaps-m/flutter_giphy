@@ -23,6 +23,7 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
   late Future<Giphy> futureAlbum; // Album
   late int myLimit = 2;
   late int myOffSet = 4;
+  String searchTerm = 'cat';
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
   Future<Giphy> fetchAlbum() async {
     final response = await http.get(
       Uri.parse(
-          'https://api.giphy.com/v1/gifs/search?api_key=$giphyApiKey&q=cat&limit=$myLimit&offset=$myOffSet&rating=g&lang=en&bundle=messaging_non_clips'),
+          'https://api.giphy.com/v1/gifs/search?api_key=$giphyApiKey&q=$searchTerm&limit=$myLimit&offset=$myOffSet&rating=g&lang=en&bundle=messaging_non_clips'),
     );
 
     if (response.statusCode == 200) {
@@ -78,14 +79,24 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
         margin: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                  decoration: InputDecoration(
+                      hintText: 'Search...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      suffixIcon: const Icon(Icons.search))),
+            ),
             FutureBuilder<Giphy>(
               future: futureAlbum,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final items = snapshot.data?.data ?? [];
 
-                  print(snapshot.data?.pagination?.totalCount);
-                  print(snapshot.data?.data?[0].type);
+                  // print(snapshot.data?.pagination?.totalCount);
+                  // print(snapshot.data?.data?[0].type);
 
                   return Expanded(
                     child: ListView.builder(
