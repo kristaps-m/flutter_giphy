@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'album.dart';
+import './../../api_key.dart';
+// lib\src\sample_feature\sample_item_details_view.dart
 import 'dart:convert';
+
+import 'giphy.dart';
 
 /// Displays detailed information about a SampleItem.
 class SampleItemDetailsView extends StatefulWidget {
@@ -15,30 +19,54 @@ class SampleItemDetailsView extends StatefulWidget {
 }
 
 class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
-  late Future<Album> futureAlbum;
+  // late Future<Album> futureAlbum; // Album
+  late Future<Giphy> futureAlbum; // Album
+  late int myLimit = 2;
+  late int myOffSet = 4;
 
   @override
   void initState() {
+    // Album
     super.initState();
     futureAlbum = fetchAlbum();
   }
+  // void initState() { // Album
+  //   super.initState();
+  //   futureAlbum = fetchAlbum();
+  // }
 
   // Future<http.Response> fetchAlbum() {
-  Future<Album> fetchAlbum() async {
+  Future<Giphy> fetchAlbum() async {
     final response = await http.get(
-      Uri.parse('https://jsonplaceholder.typicode.com/albums/1'),
+      Uri.parse(
+          'https://api.giphy.com/v1/gifs/search?api_key=$giphyApiKey&q=cat&limit=$myLimit&offset=$myOffSet&rating=g&lang=en&bundle=messaging_non_clips'),
     );
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      return Album.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      return Giphy.fromJson(jsonDecode(response.body));
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to load album');
+      throw Exception('Failed to load giphy');
     }
   }
+  // Future<Album> fetchAlbum() async {
+  //   final response = await http.get(
+  //     Uri.parse('https://jsonplaceholder.typicode.com/albums/1'),
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     // If the server did return a 200 OK response,
+  //     // then parse the JSON.
+  //     return Album.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+  //   } else {
+  //     // If the server did not return a 200 OK response,
+  //     // then throw an exception.
+  //     throw Exception('Failed to load album');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -50,17 +78,55 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
         margin: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            FutureBuilder<Album>(
+            FutureBuilder<Giphy>(
               future: futureAlbum,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return Text(snapshot.data!.title);
+                  final items = snapshot.data?.data ?? [];
+
+                  print(snapshot.data?.pagination?.totalCount);
+                  print(snapshot.data?.data?[0].type);
+
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: items.length,
+                      itemBuilder: (context, i) {
+                        final type = items[i].type ?? 'No type';
+                        return ListTile(title: Text(type));
+                      },
+                    ),
+                  );
+                  // return Column(
+                  //   children: List.generate(myLimit, (index) {
+                  //     final type = items[index].type ?? 'No Type';
+                  //     return Text(type);
+                  //   }),
+                  // );
+                  // for (int i = 0; i < myLimit; i++) {
+                  //   Text("${snapshot.data?.data?[i].type}");
+                  //   // Text("${snapshot.data?.data?[i].type}");
+                  // }
+                  // snapshot.data?.data?.map((t) => {
+                  //       return Text("${t.type}")
+                  //       // return Text(snapshot.data!.data);
+                  //     });
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
                 return const CircularProgressIndicator();
               },
             ),
+            // FutureBuilder<Album>(
+            //   future: futureAlbum,
+            //   builder: (context, snapshot) {
+            //     if (snapshot.hasData) {
+            //       return Text(snapshot.data!.title);
+            //     } else if (snapshot.hasError) {
+            //       return Text("${snapshot.error}");
+            //     }
+            //     return const CircularProgressIndicator();
+            //   },
+            // ),
           ],
           // children: [
           //   const Text(
