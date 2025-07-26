@@ -91,8 +91,23 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
                     child: ListView.builder(
                       itemCount: items.length,
                       itemBuilder: (context, i) {
-                        final type = items[i].type ?? 'No type';
-                        return ListTile(title: Text(type));
+                        // final type = items[i].type ?? 'No type';
+                        // return ListTile(title: Text(type));
+                        final item = items[i];
+                        final imageUrl = item.images?.fixedWidthSmall?.url;
+                        final h = int.parse(
+                            item.images?.fixedWidthSmall?.height ?? '100');
+                        final w = int.parse(
+                            item.images?.fixedWidthSmall?.width ?? '100');
+                        // final imageUrl = item.url;
+
+                        return ListTile(
+                          leading: Image.network(
+                            imageUrl!,
+                            width: w.toDouble(),
+                            height: h.toDouble(),
+                          ),
+                        );
                       },
                     ),
                   );
