@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'album.dart';
+import '../classes/debouncer.dart';
+// import 'album.dart';
+// import '';
 import './../../api_key.dart';
 import 'dart:convert';
 
@@ -23,6 +25,7 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
   late int myOffSet = 0;
   String searchTerm = 'cat';
   final TextEditingController _searchController = TextEditingController();
+  final _debouncer = Debouncer(milliseconds: 3000);
 
   @override
   void initState() {
@@ -59,7 +62,7 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Item Details'),
+        title: const Text('Search favorite gif...'),
       ),
       body: Container(
         margin: const EdgeInsets.all(16.0),
@@ -132,6 +135,13 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
                 // onPressed: _performSearch,
               ),
             ),
+            onChanged: (string) {
+              _debouncer.run(() {
+                print(string);
+                //perform search here
+                _performSearch(); // call API after 3k ms;
+              });
+            },
             onSubmitted: (_) => _performSearch(), // Also triggers on Enter
           ),
         ),
