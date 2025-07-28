@@ -73,29 +73,7 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
                   final items = snapshot.data?.data ?? [];
                   // print(snapshot.data?.pagination?.totalCount);
                   return Expanded(
-                    child: ListView.builder(
-                      itemCount: items.length,
-                      itemBuilder: (context, i) {
-                        final item = items[i];
-                        final imageUrl = item.images?.fixedWidthSmall?.url;
-                        // final h = int.parse(
-                        //     item.images?.fixedWidthSmall?.height ?? '100');
-                        // final w = int.parse(
-                        //     item.images?.fixedWidthSmall?.width ?? '100');
-                        final h =
-                            int.parse(item.images?.fixedWidth?.height ?? '112');
-                        final w =
-                            int.parse(item.images?.fixedWidth?.width ?? '200');
-
-                        return ListTile(
-                          leading: Image.network(
-                            imageUrl!,
-                            width: w.toDouble(),
-                            height: h.toDouble(),
-                          ),
-                        );
-                      },
-                    ),
+                    child: gridViewToDisplayGIFs(items),
                   );
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
@@ -106,6 +84,34 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
           ],
         ),
       ),
+    );
+  }
+
+  GridView gridViewToDisplayGIFs(List<Data> items) {
+    return GridView.builder(
+      itemCount: items.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, // number of columns
+        crossAxisSpacing: 8.0,
+        mainAxisSpacing: 8.0,
+        childAspectRatio: 1, // adjust if images are too tall/wide
+      ),
+      itemBuilder: (context, i) {
+        final item = items[i];
+        final imageUrl = item.images?.fixedWidthSmall?.url ?? '';
+        final h = double.tryParse(item.images?.fixedWidth?.height ?? '') ?? 112;
+        final w = double.tryParse(item.images?.fixedWidth?.width ?? '') ?? 200;
+
+        return Container(
+          padding: const EdgeInsets.all(4),
+          child: Image.network(
+            imageUrl,
+            width: w,
+            height: h,
+            fit: BoxFit.cover,
+          ),
+        );
+      },
     );
   }
 
@@ -138,3 +144,28 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
     );
   }
 }
+
+// ListView gridViewToDisplayGIFs(List<Data> items) {
+//   // This is first version - vertical list view
+//   return ListView.builder(
+//     itemCount: items.length,
+//     itemBuilder: (context, i) {
+//       final item = items[i];
+//       final imageUrl = item.images?.fixedWidthSmall?.url;
+//       // final h = int.parse(
+//       //     item.images?.fixedWidthSmall?.height ?? '100');
+//       // final w = int.parse(
+//       //     item.images?.fixedWidthSmall?.width ?? '100');
+//       final h = int.parse(item.images?.fixedWidth?.height ?? '112');
+//       final w = int.parse(item.images?.fixedWidth?.width ?? '200');
+
+//       return ListTile(
+//         leading: Image.network(
+//           imageUrl!,
+//           width: w.toDouble(),
+//           height: h.toDouble(),
+//         ),
+//       );
+//     },
+//   );
+// }
