@@ -19,7 +19,7 @@ class SampleItemDetailsView extends StatefulWidget {
 
 class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
   late Future<Giphy> futureGiphy;
-  late int myLimit = 2;
+  late int myLimit = 10;
   late int myOffSet = 0;
   String searchTerm = 'cat';
   final TextEditingController _searchController = TextEditingController();
@@ -65,33 +65,7 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
         margin: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  // padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      suffixIcon: const Icon(
-                        Icons.search,
-                        // onPressed: _performSearch,
-                      ),
-                    ),
-                    onSubmitted: (_) =>
-                        _performSearch(), // Also triggers on Enter
-                  ),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: _performSearch,
-                  child: const Text('GO'),
-                ),
-              ],
-            ),
+            giphySearchRow(),
             FutureBuilder<Giphy>(
               future: futureGiphy,
               builder: (context, snapshot) {
@@ -104,10 +78,14 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
                       itemBuilder: (context, i) {
                         final item = items[i];
                         final imageUrl = item.images?.fixedWidthSmall?.url;
-                        final h = int.parse(
-                            item.images?.fixedWidthSmall?.height ?? '100');
-                        final w = int.parse(
-                            item.images?.fixedWidthSmall?.width ?? '100');
+                        // final h = int.parse(
+                        //     item.images?.fixedWidthSmall?.height ?? '100');
+                        // final w = int.parse(
+                        //     item.images?.fixedWidthSmall?.width ?? '100');
+                        final h =
+                            int.parse(item.images?.fixedWidth?.height ?? '112');
+                        final w =
+                            int.parse(item.images?.fixedWidth?.width ?? '200');
 
                         return ListTile(
                           leading: Image.network(
@@ -128,6 +106,35 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
           ],
         ),
       ),
+    );
+  }
+
+  Row giphySearchRow() {
+    return Row(
+      children: [
+        Expanded(
+          // padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'Search...',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              suffixIcon: const Icon(
+                Icons.search,
+                // onPressed: _performSearch,
+              ),
+            ),
+            onSubmitted: (_) => _performSearch(), // Also triggers on Enter
+          ),
+        ),
+        const SizedBox(width: 8),
+        ElevatedButton(
+          onPressed: _performSearch,
+          child: const Text('GO'),
+        ),
+      ],
     );
   }
 }
