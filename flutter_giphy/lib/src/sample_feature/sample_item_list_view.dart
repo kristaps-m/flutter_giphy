@@ -8,7 +8,7 @@ import 'sample_item_details_view.dart';
 class SampleItemListView extends StatelessWidget {
   const SampleItemListView({
     super.key,
-    this.items = const [SampleItem(1), SampleItem(2), SampleItem(3)],
+    this.items = const [SampleItem(1)],
   });
 
   static const routeName = '/';
@@ -19,7 +19,7 @@ class SampleItemListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sample Items'),
+        title: const Text('Flutter Mobile App.'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -46,10 +46,8 @@ class SampleItemListView extends StatelessWidget {
         restorationId: 'sampleItemListView',
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          final item = items[index];
-
           return ListTile(
-              title: Text('SampleItem :) ${item.id}'),
+              title: const Text('Giphy GIFS'),
               leading: const CircleAvatar(
                 // Display the Flutter Logo image asset.
                 foregroundImage: AssetImage('assets/images/flutter_logo.png'),
