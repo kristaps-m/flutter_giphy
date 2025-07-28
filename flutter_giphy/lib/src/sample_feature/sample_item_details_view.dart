@@ -6,6 +6,7 @@ import '../classes/debouncer.dart';
 import './../../api_key.dart';
 import 'dart:convert';
 
+import 'gif_detail_view.dart';
 import 'giphy.dart';
 
 /// Displays detailed information about a SampleItem.
@@ -101,12 +102,31 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
       ),
       itemBuilder: (context, i) {
         final item = items[i];
+        // detailed gif data.
+        final original = item.images?.original;
+        final gifUrl = original?.url ?? '';
+        final title = item.title ?? '';
+        final originalWidth = double.tryParse(original?.width ?? '') ?? 400;
+        final originalHeight = double.tryParse(original?.height ?? '') ?? 225;
+        // grid gif data.
         final imageUrl = item.images?.fixedWidthSmall?.url ?? '';
         final h = double.tryParse(item.images?.fixedWidth?.height ?? '') ?? 112;
         final w = double.tryParse(item.images?.fixedWidth?.width ?? '') ?? 200;
 
-        return Container(
-          padding: const EdgeInsets.all(4),
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => GifDetailView(
+                  title: title,
+                  gifUrl: gifUrl,
+                  width: originalWidth,
+                  height: originalHeight,
+                ),
+              ),
+            );
+          },
           child: Image.network(
             imageUrl,
             width: w,
@@ -114,6 +134,15 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
             fit: BoxFit.cover,
           ),
         );
+        // return Container(
+        //   padding: const EdgeInsets.all(4),
+        //   child: Image.network(
+        //     imageUrl,
+        //     width: w,
+        //     height: h,
+        //     fit: BoxFit.cover,
+        //   ),
+        // );
       },
     );
   }
@@ -132,12 +161,10 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
               ),
               suffixIcon: const Icon(
                 Icons.search,
-                // onPressed: _performSearch,
               ),
             ),
             onChanged: (string) {
               _debouncer.run(() {
-                print(string);
                 //perform search here
                 _performSearch(); // call API after 3k ms;
               });
@@ -154,28 +181,3 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
     );
   }
 }
-
-// ListView gridViewToDisplayGIFs(List<Data> items) {
-//   // This is first version - vertical list view
-//   return ListView.builder(
-//     itemCount: items.length,
-//     itemBuilder: (context, i) {
-//       final item = items[i];
-//       final imageUrl = item.images?.fixedWidthSmall?.url;
-//       // final h = int.parse(
-//       //     item.images?.fixedWidthSmall?.height ?? '100');
-//       // final w = int.parse(
-//       //     item.images?.fixedWidthSmall?.width ?? '100');
-//       final h = int.parse(item.images?.fixedWidth?.height ?? '112');
-//       final w = int.parse(item.images?.fixedWidth?.width ?? '200');
-
-//       return ListTile(
-//         leading: Image.network(
-//           imageUrl!,
-//           width: w.toDouble(),
-//           height: h.toDouble(),
-//         ),
-//       );
-//     },
-//   );
-// }
