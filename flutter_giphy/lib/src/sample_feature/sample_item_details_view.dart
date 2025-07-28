@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../classes/debouncer.dart';
-// import 'album.dart';
-// import '';
 import './../../api_key.dart';
 import 'dart:convert';
 
@@ -21,20 +19,72 @@ class SampleItemDetailsView extends StatefulWidget {
 }
 
 class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
-  late Future<Giphy> futureGiphy;
-  late int myLimit = 10;
-  late int myOffSet = 0;
+  final ScrollController _scrollController = ScrollController();
+  final List<Data> _items = [];
+  bool _isLoading = false;
+  bool _hasMore = true;
+  // late Future<Giphy> futureGiphy;
+  int myLimit = 20;
+  int myOffSet = 0;
   String searchTerm = 'cat';
   final TextEditingController _searchController = TextEditingController();
   final _debouncer = Debouncer(milliseconds: 3000);
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   futureGiphy = fetchGiphy();
+  // }
   @override
   void initState() {
     super.initState();
-    futureGiphy = fetchGiphy();
+    _loadMore();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent - 200 &&
+          !_isLoading &&
+          _hasMore) {
+        _loadMore();
+      }
+    });
   }
 
-  // Future<http.Response> fetchAlbum() {
+  Future<void> _loadMore() async {
+    setState(() => _isLoading = true);
+    try {
+      final response = await http.get(Uri.parse(
+          'https://api.giphy.com/v1/gifs/search?api_key=$giphyApiKey&q=$searchTerm&limit=$myLimit&offset=$myOffSet&rating=g&lang=en&bundle=messaging_non_clips'));
+
+      if (response.statusCode == 200) {
+        final giphy = Giphy.fromJson(jsonDecode(response.body));
+        final newItems = giphy.data ?? [];
+
+        setState(() {
+          myOffSet += myLimit;
+          _items.addAll(newItems);
+          _hasMore = newItems.isNotEmpty;
+        });
+      } else {
+        throw Exception("API failed");
+      }
+    } catch (e) {
+      debugPrint("Error loading: $e");
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  void _performSearch() {
+    setState(() {
+      searchTerm = _searchController.text.trim();
+      myOffSet = 0;
+      _items.clear();
+      _hasMore = true;
+    });
+    _loadMore();
+  }
+
+/*
   Future<Giphy> fetchGiphy() async {
     final response = await http.get(
       Uri.parse(
@@ -58,7 +108,7 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
       futureGiphy = fetchGiphy();
     });
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,22 +119,28 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
         margin: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            giphySearchRow(),
-            FutureBuilder<Giphy>(
-              future: futureGiphy,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final items = snapshot.data?.data ?? [];
-                  // print(snapshot.data?.pagination?.totalCount);
-                  return Expanded(
-                    child: gridViewToDisplayGIFs(items),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                return const CircularProgressIndicator();
-              },
+            Text(
+              'Debug: limit $myLimit offSet $myOffSet items.len ${_items.length}',
+              style: const TextStyle(height: 5, fontSize: 10),
             ),
+            giphySearchRow(),
+            const SizedBox(height: 12),
+            Expanded(child: gridViewToDisplayGIFs(_items)),
+            // FutureBuilder(
+            //   // future: futureGiphy,
+            //   builder: (context, snapshot) {
+            //     if (snapshot.hasData) {
+            //       // final items = snapshot.data?.data ?? [];
+            //       // print(snapshot.data?.pagination?.totalCount);
+            //       return Expanded(
+            //         child: gridViewToDisplayGIFs(items),
+            //       );
+            //     } else if (snapshot.hasError) {
+            //       return Text("${snapshot.error}");
+            //     }
+            //     return const CircularProgressIndicator();
+            //   },
+            // ),
           ],
         ),
       ),
@@ -93,7 +149,8 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
 
   GridView gridViewToDisplayGIFs(List<Data> items) {
     return GridView.builder(
-      itemCount: items.length,
+      controller: _scrollController,
+      itemCount: items.length + (_hasMore ? 1 : 0),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2, // number of columns
         crossAxisSpacing: 8.0,
@@ -101,6 +158,9 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
         childAspectRatio: 1, // adjust if images are too tall/wide
       ),
       itemBuilder: (context, i) {
+        if (i >= items.length) {
+          return const Center(child: CircularProgressIndicator());
+        }
         final item = items[i];
         // detailed gif data.
         final original = item.images?.original;
@@ -109,9 +169,10 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
         final originalWidth = double.tryParse(original?.width ?? '') ?? 400;
         final originalHeight = double.tryParse(original?.height ?? '') ?? 225;
         // grid gif data.
-        final imageUrl = item.images?.fixedWidthSmall?.url ?? '';
-        final h = double.tryParse(item.images?.fixedWidth?.height ?? '') ?? 112;
-        final w = double.tryParse(item.images?.fixedWidth?.width ?? '') ?? 200;
+        final fixedWidth = item.images?.fixedWidth;
+        final imageUrl = fixedWidth?.url ?? '';
+        final h = double.tryParse(fixedWidth?.height ?? '') ?? 112;
+        final w = double.tryParse(fixedWidth?.width ?? '') ?? 200;
 
         return GestureDetector(
           onTap: () {
@@ -134,15 +195,6 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
             fit: BoxFit.cover,
           ),
         );
-        // return Container(
-        //   padding: const EdgeInsets.all(4),
-        //   child: Image.network(
-        //     imageUrl,
-        //     width: w,
-        //     height: h,
-        //     fit: BoxFit.cover,
-        //   ),
-        // );
       },
     );
   }
