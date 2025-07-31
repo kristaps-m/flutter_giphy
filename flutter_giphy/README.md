@@ -1,5 +1,14 @@
-RUN:
-flutter run
+### dart: ">=2.18.4 <3.0.0"
+
+### RUN:
+
+open terminal in root folder and type: `flutter run`
+
+### Flutter --version and tools
+
+Flutter 3.3.8 • channel stable • https://github.com/flutter/flutter.git
+
+Tools • Dart 2.18.4 • DevTools 2.15.0
 
 # flutter_giphy
 

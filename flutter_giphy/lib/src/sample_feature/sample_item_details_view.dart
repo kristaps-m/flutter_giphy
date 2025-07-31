@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import '../classes/debouncer.dart';
 import './../../api_key.dart';
 import 'dart:convert';
-
 import 'gif_detail_view.dart';
 import 'giphy.dart';
 
@@ -23,18 +22,12 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
   final List<Data> _items = [];
   bool _isLoading = false;
   bool _hasMore = true;
-  // late Future<Giphy> futureGiphy;
   int myLimit = 20;
   int myOffSet = 0;
   String searchTerm = 'cat';
   final TextEditingController _searchController = TextEditingController();
   final _debouncer = Debouncer(milliseconds: 3000);
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   futureGiphy = fetchGiphy();
-  // }
   @override
   void initState() {
     super.initState();
@@ -84,31 +77,6 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
     _loadMore();
   }
 
-/*
-  Future<Giphy> fetchGiphy() async {
-    final response = await http.get(
-      Uri.parse(
-          'https://api.giphy.com/v1/gifs/search?api_key=$giphyApiKey&q=$searchTerm&limit=$myLimit&offset=$myOffSet&rating=g&lang=en&bundle=messaging_non_clips'),
-    );
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return Giphy.fromJson(jsonDecode(response.body));
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load giphy');
-    }
-  }
-
-  void _performSearch() {
-    setState(() {
-      searchTerm = _searchController.text.trim();
-      futureGiphy = fetchGiphy();
-    });
-  }
-*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,28 +87,16 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
         margin: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(
-              'Debug: limit $myLimit offSet $myOffSet items.len ${_items.length}',
-              style: const TextStyle(height: 5, fontSize: 10),
-            ),
+            // Text(
+            //   'Debug: limit $myLimit offSet $myOffSet items.len ${_items.length}',
+            //   style: const TextStyle(height: 5, fontSize: 10),
+            // ),
             giphySearchRow(),
             const SizedBox(height: 12),
-            Expanded(child: gridViewToDisplayGIFs(_items)),
-            // FutureBuilder(
-            //   // future: futureGiphy,
-            //   builder: (context, snapshot) {
-            //     if (snapshot.hasData) {
-            //       // final items = snapshot.data?.data ?? [];
-            //       // print(snapshot.data?.pagination?.totalCount);
-            //       return Expanded(
-            //         child: gridViewToDisplayGIFs(items),
-            //       );
-            //     } else if (snapshot.hasError) {
-            //       return Text("${snapshot.error}");
-            //     }
-            //     return const CircularProgressIndicator();
-            //   },
-            // ),
+            Expanded(
+                child: _items.isEmpty && !_isLoading
+                    ? const Center(child: Text("No GIFs found."))
+                    : gridViewToDisplayGIFs(_items)),
           ],
         ),
       ),
