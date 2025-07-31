@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../settings/settings_view.dart';
-import 'sample_item.dart';
-import 'sample_item_details_view.dart';
+import 'giphy_item.dart';
+import 'giphy_item_details_view.dart';
 
-/// Displays a list of SampleItems.
-class SampleItemListView extends StatelessWidget {
-  const SampleItemListView({
+/// Displays a list of GiphyItems.
+class GiphyItemListView extends StatelessWidget {
+  const GiphyItemListView({
     super.key,
-    this.items = const [SampleItem(1)],
+    this.items = const [GiphyItem(1)],
   });
 
   static const routeName = '/';
 
-  final List<SampleItem> items;
+  final List<GiphyItem> items;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class SampleItemListView extends StatelessWidget {
         // Providing a restorationId allows the ListView to restore the
         // scroll position when a user leaves and returns to the app after it
         // has been killed while running in the background.
-        restorationId: 'sampleItemListView',
+        restorationId: 'GiphyItemListView',
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
@@ -58,7 +58,7 @@ class SampleItemListView extends StatelessWidget {
                 // background, the navigation stack is restored.
                 Navigator.restorablePushNamed(
                   context,
-                  SampleItemDetailsView.routeName,
+                  GiphyItemDetailsView.routeName,
                 );
               });
         },

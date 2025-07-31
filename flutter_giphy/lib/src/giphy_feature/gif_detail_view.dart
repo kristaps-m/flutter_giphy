@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 
 class GifDetailView extends StatelessWidget {
   final String title;
+  final String rating;
   final String gifUrl;
   final double width;
   final double height;
 
   const GifDetailView({
     Key? key,
+    required this.rating,
     required this.title,
     required this.gifUrl,
     required this.width,
@@ -21,7 +23,11 @@ class GifDetailView extends StatelessWidget {
       appBar: AppBar(title: const Text("GIF Detail")),
       body: Column(
         children: [
-          Text(title),
+          Text(
+            "Title: $title",
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
+          Text("Rating: $rating"),
           Center(
             child: Image.network(
               gifUrl,

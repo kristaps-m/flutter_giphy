@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../classes/debouncer.dart';
-import './../../api_key.dart';
+import '../../api_key.dart';
 import 'dart:convert';
 import 'gif_detail_view.dart';
 import 'giphy.dart';
 
-/// Displays detailed information about a SampleItem.
-class SampleItemDetailsView extends StatefulWidget {
-  const SampleItemDetailsView({super.key});
+/// Displays detailed information about a GiphyItem.
+class GiphyItemDetailsView extends StatefulWidget {
+  const GiphyItemDetailsView({super.key});
 
   static const routeName = '/sample_item';
   static const myNumber = 100;
 
   @override
-  State<SampleItemDetailsView> createState() => _SampleItemDetailsViewState();
+  State<GiphyItemDetailsView> createState() => _GiphyItemDetailsViewState();
 }
 
-class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
+class _GiphyItemDetailsViewState extends State<GiphyItemDetailsView> {
   final ScrollController _scrollController = ScrollController();
   final List<Data> _items = [];
   bool _isLoading = false;
@@ -122,6 +122,7 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
         final original = item.images?.original;
         final gifUrl = original?.url ?? '';
         final title = item.title ?? '';
+        final rating = item.rating ?? '';
         final originalWidth = double.tryParse(original?.width ?? '') ?? 400;
         final originalHeight = double.tryParse(original?.height ?? '') ?? 225;
         // grid gif data.
@@ -137,6 +138,7 @@ class _SampleItemDetailsViewState extends State<SampleItemDetailsView> {
               MaterialPageRoute(
                 builder: (_) => GifDetailView(
                   title: title,
+                  rating: rating,
                   gifUrl: gifUrl,
                   width: originalWidth,
                   height: originalHeight,
