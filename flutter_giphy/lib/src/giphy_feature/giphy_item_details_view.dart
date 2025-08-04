@@ -4,14 +4,13 @@ import '../classes/debouncer.dart';
 import '../../api_key.dart';
 import 'dart:convert';
 import 'gif_detail_view.dart';
-import 'giphy.dart';
+import '../classes/giphy.dart';
 
 /// Displays detailed information about a GiphyItem.
 class GiphyItemDetailsView extends StatefulWidget {
   const GiphyItemDetailsView({super.key});
 
   static const routeName = '/sample_item';
-  static const myNumber = 100;
 
   @override
   State<GiphyItemDetailsView> createState() => _GiphyItemDetailsViewState();

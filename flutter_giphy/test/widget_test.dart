@@ -9,6 +9,8 @@
 // more information about Widget testing.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_giphy/src/giphy_feature/giphy_item_details_view.dart';
+import 'package:flutter_giphy/src/giphy_feature/giphy_item_list_view.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -26,6 +28,26 @@ void main() {
 
       // Verify myWidget shows some text
       expect(find.byType(Text), findsOneWidget);
+    });
+
+    testWidgets('Giphy App title is visible', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: GiphyItemDetailsView(),
+        ),
+      );
+
+      expect(find.text('Search favorite gif...'), findsOneWidget);
+    });
+
+    testWidgets('Giphy item list view is visible', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: GiphyItemListView(),
+        ),
+      );
+
+      expect(find.text('Flutter Mobile App.'), findsOneWidget);
     });
   });
 }
