@@ -1,4 +1,3 @@
-// lib/views/GifDetailView.dart
 import 'package:flutter/material.dart';
 
 class GifDetailView extends StatelessWidget {
@@ -21,22 +20,30 @@ class GifDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("GIF Detail")),
-      body: Column(
-        children: [
-          Text(
-            "Title: $title",
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text(
+                "Title: $title",
+                style:
+                    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              ),
+              Text("Rating: $rating"),
+              const SizedBox(height: 12),
+              Center(
+                child: Image.network(
+                  gifUrl,
+                  width: width,
+                  height: height,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
           ),
-          Text("Rating: $rating"),
-          Center(
-            child: Image.network(
-              gifUrl,
-              width: width,
-              height: height,
-              fit: BoxFit.contain,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

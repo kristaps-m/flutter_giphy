@@ -4,6 +4,10 @@
 
 open terminal in root folder and type: `flutter run`
 
+### Run TESTS!
+
+flutter test --plain-name "MyWidget"
+
 ### Flutter --version and tools
 
 Flutter 3.3.8 • channel stable • https://github.com/flutter/flutter.git
