@@ -5,8 +5,8 @@ import 'giphy_item.dart';
 import 'giphy_item_details_view.dart';
 
 /// Displays a list of GiphyItems.
-class GiphyItemListView extends StatelessWidget {
-  const GiphyItemListView({
+class MobileAppListView extends StatelessWidget {
+  const MobileAppListView({
     super.key,
     this.items = const [GiphyItem(1)],
   });
@@ -43,7 +43,7 @@ class GiphyItemListView extends StatelessWidget {
         // Providing a restorationId allows the ListView to restore the
         // scroll position when a user leaves and returns to the app after it
         // has been killed while running in the background.
-        restorationId: 'GiphyItemListView',
+        restorationId: 'MobileAppListView',
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(

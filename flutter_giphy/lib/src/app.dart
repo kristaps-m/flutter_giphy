@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'giphy_feature/giphy_item_details_view.dart';
-import 'giphy_feature/giphy_item_list_view.dart';
+import 'giphy_feature/mobile_app_list_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -71,9 +71,9 @@ class MyApp extends StatelessWidget {
                     return SettingsView(controller: settingsController);
                   case GiphyItemDetailsView.routeName:
                     return const GiphyItemDetailsView();
-                  case GiphyItemListView.routeName:
+                  case MobileAppListView.routeName:
                   default:
-                    return const GiphyItemListView();
+                    return const MobileAppListView();
                 }
               },
             );

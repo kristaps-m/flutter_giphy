@@ -86,10 +86,6 @@ class _GiphyItemDetailsViewState extends State<GiphyItemDetailsView> {
         margin: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Text(
-            //   'Debug: limit $myLimit offSet $myOffSet items.len ${_items.length}',
-            //   style: const TextStyle(height: 5, fontSize: 10),
-            // ),
             giphySearchRow(),
             const SizedBox(height: 12),
             Expanded(
