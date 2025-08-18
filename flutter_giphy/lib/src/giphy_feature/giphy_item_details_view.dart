@@ -25,7 +25,7 @@ class _GiphyItemDetailsViewState extends State<GiphyItemDetailsView> {
   int myOffSet = 0;
   String searchTerm = 'cat';
   final TextEditingController _searchController = TextEditingController();
-  final _debouncer = Debouncer(milliseconds: 3000);
+  final _debouncer = Debouncer(milliseconds: 1500);
 
   @override
   void initState() {
