@@ -5,6 +5,7 @@ import '../../api_key.dart';
 import 'dart:convert';
 import 'gif_detail_view.dart';
 import '../classes/giphy.dart';
+import 'methods/grid_view_to_display_GIFs.dart';
 
 /// Displays detailed information about a GiphyItem.
 class GiphyItemDetailsView extends StatefulWidget {
@@ -91,72 +92,72 @@ class _GiphyItemDetailsViewState extends State<GiphyItemDetailsView> {
             Expanded(
                 child: _items.isEmpty && !_isLoading
                     ? const Center(child: Text("No GIFs found."))
-                    : gridViewToDisplayGIFs(_items)),
+                    : gridViewToDisplayGIFs(
+                        _items, _scrollController, _hasMore)),
           ],
         ),
       ),
     );
   }
 
-  GridView gridViewToDisplayGIFs(List<Data> items) {
-    return GridView.builder(
-      controller: _scrollController,
-      itemCount: items.length + (_hasMore ? 1 : 0),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // number of columns
-        crossAxisSpacing: 8.0,
-        mainAxisSpacing: 8.0,
-        childAspectRatio: 1, // adjust if images are too tall/wide
-      ),
-      itemBuilder: (context, i) {
-        if (i >= items.length) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final item = items[i];
-        // detailed gif data.
-        final original = item.images?.original;
-        final gifUrl = original?.url ?? '';
-        final title = item.title ?? '';
-        final rating = item.rating ?? '';
-        final originalWidth = double.tryParse(original?.width ?? '') ?? 400;
-        final originalHeight = double.tryParse(original?.height ?? '') ?? 225;
-        // grid gif data.
-        final fixedWidth = item.images?.fixedWidth;
-        final imageUrl = fixedWidth?.url ?? '';
-        final h = double.tryParse(fixedWidth?.height ?? '') ?? 112;
-        final w = double.tryParse(fixedWidth?.width ?? '') ?? 200;
+  // GridView gridViewToDisplayGIFs(List<Data> items) {
+  //   return GridView.builder(
+  //     controller: _scrollController,
+  //     itemCount: items.length + (_hasMore ? 1 : 0),
+  //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //       crossAxisCount: 2, // number of columns
+  //       crossAxisSpacing: 8.0,
+  //       mainAxisSpacing: 8.0,
+  //       childAspectRatio: 1, // adjust if images are too tall/wide
+  //     ),
+  //     itemBuilder: (context, i) {
+  //       if (i >= items.length) {
+  //         return const Center(child: CircularProgressIndicator());
+  //       }
+  //       final item = items[i];
+  //       // detailed gif data.
+  //       final original = item.images?.original;
+  //       final gifUrl = original?.url ?? '';
+  //       final title = item.title ?? '';
+  //       final rating = item.rating ?? '';
+  //       final originalWidth = double.tryParse(original?.width ?? '') ?? 400;
+  //       final originalHeight = double.tryParse(original?.height ?? '') ?? 225;
+  //       // grid gif data.
+  //       final fixedWidth = item.images?.fixedWidth;
+  //       final imageUrl = fixedWidth?.url ?? '';
+  //       final h = double.tryParse(fixedWidth?.height ?? '') ?? 112;
+  //       final w = double.tryParse(fixedWidth?.width ?? '') ?? 200;
 
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => GifDetailView(
-                  title: title,
-                  rating: rating,
-                  gifUrl: gifUrl,
-                  width: originalWidth,
-                  height: originalHeight,
-                ),
-              ),
-            );
-          },
-          child: Image.network(
-            imageUrl,
-            width: w,
-            height: h,
-            fit: BoxFit.cover,
-          ),
-        );
-      },
-    );
-  }
+  //       return GestureDetector(
+  //         onTap: () {
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(
+  //               builder: (_) => GifDetailView(
+  //                 title: title,
+  //                 rating: rating,
+  //                 gifUrl: gifUrl,
+  //                 width: originalWidth,
+  //                 height: originalHeight,
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //         child: Image.network(
+  //           imageUrl,
+  //           width: w,
+  //           height: h,
+  //           fit: BoxFit.cover,
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Row giphySearchRow() {
     return Row(
       children: [
         Expanded(
-          // padding: const EdgeInsets.all(8.0),
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
@@ -171,7 +172,7 @@ class _GiphyItemDetailsViewState extends State<GiphyItemDetailsView> {
             onChanged: (string) {
               _debouncer.run(() {
                 //perform search here
-                _performSearch(); // call API after 3k ms;
+                _performSearch(); // call API after 1.5k ms;
               });
             },
             onSubmitted: (_) => _performSearch(), // Also triggers on Enter

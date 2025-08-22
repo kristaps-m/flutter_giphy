@@ -23,8 +23,8 @@ Default searchTerm text is set to 'cat'
 
 Search your favorite gif by typing inside `TextField` and...
 
-- Wait 3 seconds.
-- Press GO.
+- Wait 1.5 seconds.
+- Or press GO.
 - Or press enter.
 
 <img src="readme_pictures/search_gif.png" width="200">
@@ -42,6 +42,18 @@ It is possible to add more information in DetailsView for example:
 Full giphy api response class see here: flutter_giphy\lib\src\classes\giphy.dart
 
 <img src="readme_pictures/gif_details.png" width="200">
+
+### Add API key!
+
+1. create new file `flutter_giphy\lib\api_key.dart`.
+2. Inside file add constant named `giphyApiKey`:
+
+```
+  // api_key.dart
+  const giphyApiKey = 'copy_and_paste_your_api_key_here';
+```
+
+Documentation [https://developers.giphy.com/docs/api/](https://developers.giphy.com/docs/api/)
 
 ### RUN:
 
