@@ -57,11 +57,7 @@ class MobileAppListView extends StatelessWidget {
                 // Navigate to the details page. If the user leaves and returns to
                 // the app after it has been killed while running in the
                 // background, the navigation stack is restored.
-                Navigator.restorablePushNamed(
-                    context,
-                    // GiphyItemView.routeName,
-                    // '/sample_item',
-                    items[index].routeName);
+                Navigator.restorablePushNamed(context, items[index].routeName);
               });
         },
       ),

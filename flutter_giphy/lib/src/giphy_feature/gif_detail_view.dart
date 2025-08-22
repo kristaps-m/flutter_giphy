@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../styles/gif_detail_styles.dart';
+
 class GifDetailView extends StatelessWidget {
   final String title;
   final String rating;
@@ -27,10 +29,12 @@ class GifDetailView extends StatelessWidget {
             children: [
               Text(
                 "Title: $title",
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                style: GifDetailStyles.titleStyle,
               ),
-              Text("Rating: $rating"),
+              Text(
+                "Rating: $rating",
+                style: GifDetailStyles.ratingStyle,
+              ),
               const SizedBox(height: 12),
               Center(
                 child: Image.network(
