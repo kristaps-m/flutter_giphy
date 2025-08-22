@@ -12,7 +12,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_giphy/src/giphy_feature/gif_detail_view.dart';
-import 'package:flutter_giphy/src/giphy_feature/giphy_item_details_view.dart';
+import 'package:flutter_giphy/src/giphy_feature/giphy_item_view.dart';
 import 'package:flutter_giphy/src/giphy_feature/mobile_app_list_view.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -36,7 +36,7 @@ void main() {
     testWidgets('Giphy App title is visible', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: GiphyItemDetailsView(),
+          home: GiphyItemView(),
         ),
       );
 

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../settings/settings_view.dart';
-import 'giphy_item.dart';
-import 'giphy_item_details_view.dart';
+import '../classes/about_item.dart';
+import '../classes/generic_item.dart';
+import '../classes/giphy_item.dart';
 
 /// Displays a list of GiphyItems.
 class MobileAppListView extends StatelessWidget {
   const MobileAppListView({
     super.key,
-    this.items = const [GiphyItem(1)],
+    this.items = const [GiphyItem(1), AboutItem(2)],
   });
 
   static const routeName = '/';
 
-  final List<GiphyItem> items;
+  final List<GenericItem> items;
 
   @override
   Widget build(BuildContext context) {
@@ -47,19 +48,20 @@ class MobileAppListView extends StatelessWidget {
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
-              title: const Text('Giphy GIFS'),
-              leading: const CircleAvatar(
+              title: Text(items[index].theTitle),
+              leading: CircleAvatar(
                 // Display the Flutter Logo image asset.
-                foregroundImage: AssetImage('assets/images/gif.png'),
+                foregroundImage: AssetImage(items[index].imageLink),
               ),
               onTap: () {
                 // Navigate to the details page. If the user leaves and returns to
                 // the app after it has been killed while running in the
                 // background, the navigation stack is restored.
                 Navigator.restorablePushNamed(
-                  context,
-                  GiphyItemDetailsView.routeName,
-                );
+                    context,
+                    // GiphyItemView.routeName,
+                    // '/sample_item',
+                    items[index].routeName);
               });
         },
       ),

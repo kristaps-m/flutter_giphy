@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../api_key.dart';
 import 'dart:convert';
-import 'gif_detail_view.dart';
 import '../classes/giphy.dart';
 import 'methods/giphy_search_row.dart';
 import 'methods/grid_view_to_display_GIFs.dart';
 
 /// Displays detailed information about a GiphyItem.
-class GiphyItemDetailsView extends StatefulWidget {
-  const GiphyItemDetailsView({super.key});
+class GiphyItemView extends StatefulWidget {
+  const GiphyItemView({super.key});
 
-  static const routeName = '/sample_item';
+  static const routeName = '/giphy_item';
 
   @override
-  State<GiphyItemDetailsView> createState() => _GiphyItemDetailsViewState();
+  State<GiphyItemView> createState() => _GiphyItemViewState();
 }
 
-class _GiphyItemDetailsViewState extends State<GiphyItemDetailsView> {
+class _GiphyItemViewState extends State<GiphyItemView> {
   final ScrollController _scrollController = ScrollController();
   final List<Data> _items = [];
   bool _isLoading = false;
@@ -26,7 +25,6 @@ class _GiphyItemDetailsViewState extends State<GiphyItemDetailsView> {
   int myOffSet = 0;
   String searchTerm = 'cat';
   final TextEditingController _searchController = TextEditingController();
-  // final _debouncer = Debouncer(milliseconds: 1500);
 
   @override
   void initState() {
