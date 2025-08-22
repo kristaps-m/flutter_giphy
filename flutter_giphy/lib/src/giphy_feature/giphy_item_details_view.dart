@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../classes/debouncer.dart';
 import '../../api_key.dart';
 import 'dart:convert';
 import 'gif_detail_view.dart';
 import '../classes/giphy.dart';
+import 'methods/giphy_search_row.dart';
 import 'methods/grid_view_to_display_GIFs.dart';
 
 /// Displays detailed information about a GiphyItem.
@@ -26,7 +26,7 @@ class _GiphyItemDetailsViewState extends State<GiphyItemDetailsView> {
   int myOffSet = 0;
   String searchTerm = 'cat';
   final TextEditingController _searchController = TextEditingController();
-  final _debouncer = Debouncer(milliseconds: 1500);
+  // final _debouncer = Debouncer(milliseconds: 1500);
 
   @override
   void initState() {
@@ -87,7 +87,7 @@ class _GiphyItemDetailsViewState extends State<GiphyItemDetailsView> {
         margin: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            giphySearchRow(),
+            giphySearchRow(_searchController, _performSearch),
             const SizedBox(height: 12),
             Expanded(
                 child: _items.isEmpty && !_isLoading
@@ -97,93 +97,6 @@ class _GiphyItemDetailsViewState extends State<GiphyItemDetailsView> {
           ],
         ),
       ),
-    );
-  }
-
-  // GridView gridViewToDisplayGIFs(List<Data> items) {
-  //   return GridView.builder(
-  //     controller: _scrollController,
-  //     itemCount: items.length + (_hasMore ? 1 : 0),
-  //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //       crossAxisCount: 2, // number of columns
-  //       crossAxisSpacing: 8.0,
-  //       mainAxisSpacing: 8.0,
-  //       childAspectRatio: 1, // adjust if images are too tall/wide
-  //     ),
-  //     itemBuilder: (context, i) {
-  //       if (i >= items.length) {
-  //         return const Center(child: CircularProgressIndicator());
-  //       }
-  //       final item = items[i];
-  //       // detailed gif data.
-  //       final original = item.images?.original;
-  //       final gifUrl = original?.url ?? '';
-  //       final title = item.title ?? '';
-  //       final rating = item.rating ?? '';
-  //       final originalWidth = double.tryParse(original?.width ?? '') ?? 400;
-  //       final originalHeight = double.tryParse(original?.height ?? '') ?? 225;
-  //       // grid gif data.
-  //       final fixedWidth = item.images?.fixedWidth;
-  //       final imageUrl = fixedWidth?.url ?? '';
-  //       final h = double.tryParse(fixedWidth?.height ?? '') ?? 112;
-  //       final w = double.tryParse(fixedWidth?.width ?? '') ?? 200;
-
-  //       return GestureDetector(
-  //         onTap: () {
-  //           Navigator.push(
-  //             context,
-  //             MaterialPageRoute(
-  //               builder: (_) => GifDetailView(
-  //                 title: title,
-  //                 rating: rating,
-  //                 gifUrl: gifUrl,
-  //                 width: originalWidth,
-  //                 height: originalHeight,
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //         child: Image.network(
-  //           imageUrl,
-  //           width: w,
-  //           height: h,
-  //           fit: BoxFit.cover,
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  Row giphySearchRow() {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Search...',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              suffixIcon: const Icon(
-                Icons.search,
-              ),
-            ),
-            onChanged: (string) {
-              _debouncer.run(() {
-                //perform search here
-                _performSearch(); // call API after 1.5k ms;
-              });
-            },
-            onSubmitted: (_) => _performSearch(), // Also triggers on Enter
-          ),
-        ),
-        const SizedBox(width: 8),
-        ElevatedButton(
-          onPressed: _performSearch,
-          child: const Text('GO'),
-        ),
-      ],
     );
   }
 }
